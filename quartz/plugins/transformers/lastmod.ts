@@ -35,6 +35,7 @@ export const CreatedModifiedDate: QuartzTransformerPlugin<Partial<Options>> = (u
       return [
         () => {
           let repo: Repository | undefined = undefined
+          let repoRoot: string | undefined = undefined
           return async (_tree, file) => {
             let created: MaybeDate = undefined
             let modified: MaybeDate = undefined
@@ -56,11 +57,12 @@ export const CreatedModifiedDate: QuartzTransformerPlugin<Partial<Options>> = (u
                   // Get a reference to the main git repo.
                   // It's either the same as the workdir,
                   // or 1+ level higher in case of a submodule/subtree setup
-                  repo = Repository.discover(file.cwd)
+                  repo = Repository.discover(fp)
+                  repoRoot = path.join(repo.path(), '..')
                 }
 
                 try {
-                  modified ||= await repo.getFileLatestModifiedDateAsync(file.data.filePath!)
+                  modified ||= await repo.getFileLatestModifiedDateAsync(path.relative(repoRoot, fp))
                 } catch {
                   console.log(
                     chalk.yellow(
