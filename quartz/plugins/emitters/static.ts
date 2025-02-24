@@ -1,4 +1,5 @@
-import { FilePath, QUARTZ, joinSegments } from "../../util/path"
+import { QUARTZ } from "../../constants"
+import { FilePath, joinSegments } from "../../util/path"
 import { QuartzEmitterPlugin } from "../types"
 import fs from "fs"
 import { glob } from "../../util/glob"

@@ -30,7 +30,7 @@ import {
   version,
   fp,
   cacheFile,
-  cwd,
+  packageRootPath,
 } from "./constants.js"
 
 /**
@@ -40,7 +40,7 @@ import {
 export async function handleCreate(argv) {
   console.log()
   intro(chalk.bgGreen.black(` Quartz v${version} `))
-  const contentFolder = path.join(cwd, argv.directory)
+  const contentFolder = path.join(packageRootPath, argv.directory)
   let setupStrategy = argv.strategy?.toLowerCase()
   let linkResolutionStrategy = argv.links?.toLowerCase()
   const sourceDirectory = argv.source
@@ -190,7 +190,7 @@ See the [documentation](https://quartz.jzhao.xyz) for how to get started.
   }
 
   // now, do config changes
-  const configFilePath = path.join(cwd, "quartz.config.ts")
+  const configFilePath = path.join(packageRootPath, "quartz.config.ts")
   let configContent = await fs.promises.readFile(configFilePath, { encoding: "utf-8" })
   configContent = configContent.replace(
     /markdownLinkResolution: '(.+)'/,
@@ -315,7 +315,7 @@ export async function handleBuild(argv) {
 
     // bypass module cache
     // https://github.com/nodejs/modules/issues/307
-    const { default: buildQuartz } = await import(`../../${cacheFile}?update=${randomUUID()}`)
+    const { default: buildQuartz } = await import(`${cacheFile}?update=${randomUUID()}`)
     // ^ this import is relative, so base "cacheFile" path can't be used
 
     cleanupBuild = await buildQuartz(argv, buildMutex, clientRefresh)
@@ -450,7 +450,7 @@ export async function handleBuild(argv) {
  * @param {*} argv arguments for `update`
  */
 export async function handleUpdate(argv) {
-  const contentFolder = path.join(cwd, argv.directory)
+  const contentFolder = path.join(packageRootPath, argv.directory)
   console.log(chalk.bgGreen.black(`\n Quartz v${version} \n`))
   console.log("Backing up your content")
   execSync(
@@ -502,7 +502,7 @@ export async function handleUpdate(argv) {
  * @param {*} argv arguments for `restore`
  */
 export async function handleRestore(argv) {
-  const contentFolder = path.join(cwd, argv.directory)
+  const contentFolder = path.join(packageRootPath, argv.directory)
   await popContentFolder(contentFolder)
 }
 
@@ -511,7 +511,7 @@ export async function handleRestore(argv) {
  * @param {*} argv arguments for `sync`
  */
 export async function handleSync(argv) {
-  const contentFolder = path.join(cwd, argv.directory)
+  const contentFolder = path.join(packageRootPath, argv.directory)
   console.log(chalk.bgGreen.black(`\n Quartz v${version} \n`))
   console.log("Backing up your content")
 

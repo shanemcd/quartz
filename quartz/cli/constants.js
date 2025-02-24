@@ -1,5 +1,9 @@
 import path from "path"
 import { readFileSync } from "fs"
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 /**
  * All constants relating to helpers or handlers
@@ -7,9 +11,9 @@ import { readFileSync } from "fs"
 export const ORIGIN_NAME = "origin"
 export const UPSTREAM_NAME = "upstream"
 export const QUARTZ_SOURCE_BRANCH = "v4"
-export const cwd = process.cwd()
-export const cacheDir = path.join(cwd, ".quartz-cache")
-export const cacheFile = "./quartz/.quartz-cache/transpiled-build.mjs"
-export const fp = "./quartz/build.ts"
-export const { version } = JSON.parse(readFileSync("./package.json").toString())
-export const contentCacheFolder = path.join(cacheDir, "content-cache")
+export const packageRootPath = path.join(__dirname, '..', '..')
+export const cacheDir = path.join(packageRootPath, ".quartz-cache")
+export const cacheFile = path.join(packageRootPath, "quartz/.quartz-cache/transpiled-build.mjs")
+export const fp = path.join(packageRootPath, "quartz/build.ts")
+export const contentCacheFolder = path.join(packageRootPath, cacheDir, "content-cache")
+export const { version } = JSON.parse(readFileSync(path.join(packageRootPath, "./package.json")).toString())
